@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enroll – Instriq</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Caudex:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+:root {
+  --bg: #0b0b0b;
+  --text: #ffffff;
+  --card: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.08);
+  --accent: #219ebc;
+  --accent-soft: #8ecae6;
+  --success: #4ade80;
+  --muted: #aaa;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px 80px;
+}
+
+/* Background */
+.bg-premium { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+.bg-grid {
+  position: absolute; width: 200%; height: 200%;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.25;
+}
+.bg-glow {
+  position: absolute; width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+  filter: blur(120px);
+  animation: moveGlow 20s ease-in-out infinite alternate;
+  opacity: 0.3;
+}
+@keyframes moveGlow {
+  0% { transform: translate(-20%, -20%); }
+  100% { transform: translate(40%, 30%); }
+}
+
+/* Back link */
+.back-link {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 36px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent-soft); }
+.back-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 36px;
+  animation: fadeUp 0.5s ease both;
+}
+.page-header .brand {
+  font-family: 'Caudex', serif;
+  font-size: 28px;
+  color: var(--accent-soft);
+  letter-spacing: 2px;
+}
+.page-header h1 {
+  font-family: 'Caudex', serif;
+  font-size: clamp(20px, 4vw, 30px);
+  font-weight: 700;
+  margin-top: 6px;
+}
+.page-header .course-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--accent);
+  color: var(--accent-soft);
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Steps */
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 40px;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11px;
+  color: var(--muted);
+  position: relative;
+  min-width: 90px;
+}
+.step-item.active .step-dot { background: var(--accent); border-color: var(--accent); color: #fff; }
+.step-item.done .step-dot { background: var(--success); border-color: var(--success); color: #000; }
+.step-dot {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  transition: all 0.3s;
+}
+.step-line {
+  position: absolute;
+  top: 15px; left: calc(50% + 15px);
+  width: calc(100% - 30px);
+  height: 2px;
+  background: var(--border);
+}
+.step-item.done .step-line { background: var(--success); }
+
+/* Main card */
+.main-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 480px;
+  backdrop-filter: blur(12px);
+  animation: fadeUp 0.5s 0.2s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Course summary row */
+.course-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(33,158,188,0.07);
+  border: 1px solid rgba(33,158,188,0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+}
+.course-summary .label { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+h2, h3 {
+  font-family: 'Caudex', serif;
+}
+
+.course-summary .name {
+  font-family: 'Caudex', serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+.course-summary .amount {
+  font-size: 26px; font-weight: 700;
+  color: var(--accent-soft);
+  font-family: 'Caudex', serif;
+}
+
+/* UPI Section */
+.upi-section { margin-bottom: 28px; }
+.section-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* UPI ID copy box */
+.upi-id-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+.upi-id-box .upi-id-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--accent-soft);
+  letter-spacing: 0.5px;
+}
+.copy-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent-soft); }
+.copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+/* QR Code */
+.qr-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+#qrcode {
+  padding: 10px;
+  background: white;
+  border-radius: 12px;
+  display: inline-block;
+  line-height: 0;
+}
+.qr-hint { font-size: 12px; color: var(--muted); }
+
+/* UPI app icons */
+.upi-apps {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.upi-app-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 11px;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.upi-app-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+.upi-app-btn img { width: 32px; height: 32px; border-radius: 8px; }
+.upi-app-btn span { color: var(--muted); }
+
+/* Divider */
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 20px 0;
+}
+.or-divider::before, .or-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Form */
+.form-group { margin-bottom: 18px; }
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+.form-group input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-group input:focus { border-color: var(--accent); }
+.form-group input::placeholder { color: rgba(255,255,255,0.2); }
+
+/* Notice */
+.notice {
+  background: rgba(33,158,188,0.07);
+  border: 1px solid rgba(33,158,188,0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--accent-soft);
+  margin-bottom: 22px;
+  line-height: 1.6;
+}
+.notice strong { color: #fff; }
+
+/* Submit btn */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent), #1a7f99);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.submit-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.submit-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* Success screen */
+.success-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 20px 0;
+}
+.success-icon {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  background: rgba(74,222,128,0.15);
+  border: 2px solid var(--success);
+  display: flex; align-items: center; justify-content: center;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.success-icon svg { width: 36px; height: 36px; fill: var(--success); }
+.success-screen h2 { font-size: 22px; }
+.success-screen p { color: var(--muted); font-size: 14px; line-height: 1.6; max-width: 300px; }
+.wa-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 28px;
+  background: #25D366;
+  border: none; border-radius: 12px;
+  color: white; font-size: 15px; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  animation: fadeUp 0.4s 0.3s ease both;
+}
+.wa-btn:hover { opacity: 0.85; }
+.wa-btn svg { width: 22px; height: 22px; fill: white; }
+
+/* Responsive */
+@media (max-width: 520px) {
+  .main-card { padding: 24px 18px; }
+  .steps .step-item { min-width: 70px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-premium">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+</div>
+
+<a href="index.html" class="back-link">
+  <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+  Back to Instriq
+</a>
+
+<!-- Header -->
+<div class="page-header">
+  <div class="brand">Instriq</div>
+  <h1>Complete Your Enrollment</h1>
+  <span class="course-badge" id="course-badge">Loading…</span>
+</div>
+
+<!-- Step indicators -->
+<div class="steps">
+  <div class="step-item active" id="step1">
+    <div class="step-dot">1</div>
+    <span>Pay</span>
+    <div class="step-line"></div>
+  </div>
+  <div class="step-item" id="step2">
+    <div class="step-dot">2</div>
+    <span>Confirm</span>
+    <div class="step-line"></div>
+  </div>
+  <div class="step-item" id="step3">
+    <div class="step-dot">3</div>
+    <span>Done</span>
+  </div>
+</div>
+
+<!-- Main card -->
+<div class="main-card" id="main-card">
+
+  <!-- Course Summary -->
+  <div class="course-summary">
+    <div>
+      <div class="label">Course</div>
+      <div class="name" id="course-name">–</div>
+    </div>
+    <div class="amount" id="course-price">–</div>
+  </div>
+
+  <!-- UPI Payment -->
+  <div class="upi-section">
+    <div class="section-label">Pay via UPI</div>
+
+    <!-- UPI ID -->
+    <div class="upi-id-box">
+      <div class="upi-id-text" id="upi-id-display">instriq.traders@upi</div>
+      <button class="copy-btn" id="copy-btn" onclick="copyUPI()">Copy</button>
+    </div>
+
+    <!-- QR Code -->
+    <div class="qr-wrapper">
+      <div id="qrcode"></div>
+      <div class="qr-hint">Scan with any UPI app to pay</div>
+    </div>
+
+    <!-- UPI App shortcuts -->
+    <div class="upi-apps">
+      <a class="upi-app-btn" id="gpay-link" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png" alt="GPay">
+        <span>GPay</span>
+      </a>
+      <a class="upi-app-btn" id="phonepe-link" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/PhonePe_Logo.svg/512px-PhonePe_Logo.svg.png" alt="PhonePe">
+        <span>PhonePe</span>
+      </a>
+      <a class="upi-app-btn" id="paytm-link" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/512px-Paytm_Logo_%28standalone%29.svg.png" alt="Paytm">
+        <span>Paytm</span>
+      </a>
+      <a class="upi-app-btn" id="bhim-link" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/6f/BHIM_SVG_Logo.svg/512px-BHIM_SVG_Logo.svg.png" alt="BHIM">
+        <span>BHIM</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="or-divider">After payment, fill in below</div>
+
+  <!-- Confirmation form -->
+  <div class="form-group">
+    <label>Your Full Name</label>
+    <input type="text" id="input-name" placeholder="e.g. Arjun Sharma">
+  </div>
+  <div class="form-group">
+    <label>Phone Number (WhatsApp)</label>
+    <input type="tel" id="input-phone" placeholder="e.g. 9876543210" maxlength="10">
+  </div>
+  <div class="form-group">
+    <label>UPI Transaction / UTR ID</label>
+    <input type="text" id="input-txn" placeholder="12-digit transaction ID from your UPI app">
+  </div>
+
+  <div class="notice">
+    📌 <strong>Important:</strong> After clicking below, a WhatsApp message will open. Please <strong>send it</strong> so we can verify your payment and share course access within 30 minutes.
+  </div>
+
+  <button class="submit-btn" onclick="handleConfirm()">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M5.077 19.267l.265-.265A9.961 9.961 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.959 9.959 0 01-5.592-1.712l-3.869 1.057 1.538-3.078zM12 0C5.373 0 0 5.373 0 12c0 2.129.559 4.126 1.532 5.856L.054 23.5a.5.5 0 00.617.617l5.543-1.476A11.957 11.957 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+    Confirm via WhatsApp
+  </button>
+
+  <!-- Success screen (hidden by default) -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    </div>
+    <h2>Payment Submitted!</h2>
+    <p>Your enrollment request has been received. We'll verify and send course access within <strong>30 minutes</strong>.</p>
+    <a class="wa-btn" id="wa-link" target="_blank">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M5.077 19.267l.265-.265A9.961 9.961 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.959 9.959 0 01-5.592-1.712l-3.869 1.057 1.538-3.078zM12 0C5.373 0 0 5.373 0 12c0 2.129.559 4.126 1.532 5.856L.054 23.5a.5.5 0 00.617.617l5.543-1.476A11.957 11.957 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+      Open WhatsApp to Send
+    </a>
+  </div>
+
+</div><!-- /main-card -->
+
+<script>
+// ─── CONFIG – CHANGE THESE ───────────────────────────────────────────────────
+const CONFIG = {
+  upiId:   "instriq.traders@upi",          // ← Your UPI ID
+  payeeName: "Instriq",                     // ← Payee name shown in UPI app
+  whatsappNumber: "919999999999"            // ← Your WhatsApp number (91 + 10 digits, no +)
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
+const COURSES = {
+  foundation:   { name: "Foundation",   price: 999 },
+  intermediate: { name: "Intermediate", price: 2999 },
+  advanced:     { name: "Advanced",     price: 6999 }
+};
+
+const params = new URLSearchParams(location.search);
+const courseKey = (params.get("course") || "foundation").toLowerCase();
+const course = COURSES[courseKey] || COURSES.foundation;
+
+// Populate UI
+document.getElementById("course-badge").textContent  = course.name + " Course";
+document.getElementById("course-name").textContent   = course.name;
+document.getElementById("course-price").textContent  = "₹" + course.price.toLocaleString("en-IN");
+document.getElementById("upi-id-display").textContent = CONFIG.upiId;
+document.title = "Enroll – " + course.name + " | Instriq";
+
+// Build UPI deep link
+const upiLink = `upi://pay?pa=${CONFIG.upiId}&pn=${encodeURIComponent(CONFIG.payeeName)}&am=${course.price}&cu=INR&tn=${encodeURIComponent("Instriq " + course.name + " Course")}`;
+
+// UPI app shortcuts
+document.getElementById("gpay-link").href    = `gpay://upi/pay?pa=${CONFIG.upiId}&pn=${encodeURIComponent(CONFIG.payeeName)}&am=${course.price}&cu=INR`;
+document.getElementById("phonepe-link").href = upiLink;
+document.getElementById("paytm-link").href   = upiLink;
+document.getElementById("bhim-link").href    = upiLink;
+
+// QR Code
+new QRCode(document.getElementById("qrcode"), {
+  text: upiLink,
+  width: 180,
+  height: 180,
+  colorDark: "#000000",
+  colorLight: "#ffffff",
+  correctLevel: QRCode.CorrectLevel.H
+});
+
+// Copy UPI ID
+function copyUPI() {
+  navigator.clipboard.writeText(CONFIG.upiId).then(() => {
+    const btn = document.getElementById("copy-btn");
+    btn.textContent = "Copied!";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 2000);
+  });
+}
+
+// Step helpers
+function setStep(n) {
+  ["step1","step2","step3"].forEach((id, i) => {
+    const el = document.getElementById(id);
+    el.classList.remove("active","done");
+    if (i + 1 < n) el.classList.add("done");
+    if (i + 1 === n) el.classList.add("active");
+  });
+}
+
+// Confirm payment → open WhatsApp
+function handleConfirm() {
+  const name  = document.getElementById("input-name").value.trim();
+  const phone = document.getElementById("input-phone").value.trim();
+  const txn   = document.getElementById("input-txn").value.trim();
+
+  if (!name)  { alert("Please enter your full name."); return; }
+  if (!phone || phone.length < 10) { alert("Please enter a valid 10-digit phone number."); return; }
+  if (!txn)   { alert("Please enter your UPI Transaction / UTR ID."); return; }
+
+  setStep(3);
+
+  // Compose WhatsApp message to business owner
+  const msg = 
+    `🎓 *New Enrollment – Instriq*\n\n` +
+    `*Course:* ${course.name}\n` +
+    `*Amount:* ₹${course.price.toLocaleString("en-IN")}\n` +
+    `*Name:* ${name}\n` +
+    `*Phone:* ${phone}\n` +
+    `*UTR / Txn ID:* ${txn}\n\n` +
+    `Please verify and provide access. Thank you!`;
+
+  const waURL = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+
+  // Show success & set link
+  document.getElementById("wa-link").href = waURL;
+  document.getElementById("success-screen").style.display = "flex";
+
+  // Hide form elements, keep summary visible
+  document.querySelectorAll(".upi-section, .or-divider, .form-group, .notice, .submit-btn").forEach(el => {
+    el.style.display = "none";
+  });
+
+  // Auto-open WhatsApp
+  setTimeout(() => { window.open(waURL, "_blank"); }, 600);
+}
+</script>
+
+</body>
+</html>
