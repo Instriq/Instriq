@@ -530,7 +530,7 @@ h2, h3 {
 const CONFIG = {
   upiId:   "instriq.traders@upi",          // ← Your UPI ID
   payeeName: "Instriq",                     // ← Payee name shown in UPI app
-  whatsappNumber: "919999999999"            // ← Your WhatsApp number (91 + 10 digits, no +)
+  whatsappNumber: "918248840260"            // ← Your WhatsApp number (91 + 10 digits, no +)
 };
 // ─────────────────────────────────────────────────────────────────────────────
 
