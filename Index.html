@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instriq</title>
+
+<!-- FONTS -->
+<link href="https://fonts.googleapis.com/css2?family=Caudex:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* DARK THEME */
+:root {
+  --bg: #0b0b0b;
+  --text: #ffffff;
+  --card: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.08);
+  --accent: #219ebc;
+  --accent-soft: #8ecae6;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+/* BACKGROUND */
+.bg-premium {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.bg-grid {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.25;
+}
+
+.bg-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+  filter: blur(120px);
+  animation: moveGlow 20s ease-in-out infinite alternate;
+  opacity: 0.35;
+}
+
+@keyframes moveGlow {
+  0% { transform: translate(-20%, -20%); }
+  100% { transform: translate(40%, 30%); }
+}
+
+/* HERO SECTION */
+.hero {
+  text-align: center;
+  padding: 80px 0 40px;
+}
+
+.hero-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.logo-text {
+  font-family: 'Caudex', serif;
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 700;
+  margin: 0;
+}
+
+.logo-text::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 3px;
+  margin: 12px auto;
+  background: linear-gradient(to right, var(--accent-soft), var(--accent));
+}
+
+.hero p {
+  color: #aaa;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* SECTION */
+.section {
+  padding: 40px 0;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* GRID & CARDS */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 30px 20px;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
+  text-align: center;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-8px);
+}
+
+.price {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 15px 0;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 20px;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 60px 0 80px;
+  color: #aaa;
+}
+
+.footer-mail {
+  display: block;
+  margin-top: 8px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.insta-icon {
+  width: 24px;
+  height: 24px;
+  fill: var(--text);
+  margin-top: 20px;
+  transition: 0.3s;
+}
+
+.insta-icon:hover {
+  fill: var(--accent);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg-premium">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+</div>
+
+<div class="container">
+
+  <!-- HERO: Logo moved before Title -->
+  <div class="hero">
+    <img src="Instriq.logo.png" alt="Instriq Logo" class="hero-logo">
+    <h1 class="logo-text">Instriq</h1>
+    <p>Precision over prediction.</p>
+  </div>
+
+  <!-- COURSES -->
+  <div class="section">
+    <h2>Course Details</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Foundation</h3>
+        <p>Basics of markets, options & discipline.</p>
+        <div class="price">₹999</div>
+        <a href="enroll.html?course=foundation" class="btn">Enroll Now</a>
+      </div>
+
+      <div class="card">
+        <h3>Intermediate</h3>
+        <p>Structure, strike selection & execution.</p>
+        <div class="price">₹2,999</div>
+        <a href="enroll.html?course=intermediate" class="btn">Enroll Now</a>
+      </div>
+
+      <div class="card">
+        <h3>Advanced</h3>
+        <p>Full INSTRIQ system & live execution.</p>
+        <div class="price">₹6,999</div>
+        <a href="enroll.html?course=advanced" class="btn">Enroll Now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>Contact us</div>
+    <a href="mailto:Instriq.traders@gmail.com" class="footer-mail">
+      Instriq.traders@gmail.com
+    </a>
+    
+    <!-- Insta Logo moved below email -->
+    <a href="https://www.instagram.com/instriq.traders" target="_blank">
+      <svg class="insta-icon" viewBox="0 0 24 24">
+        <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3a5 5 0 100 10 5 5 0 000-10zm0 2.2a2.8 2.8 0 110 5.6 2.8 2.8 0 010-5.6zM17.5 6a1 1 0 100 2 1 1 0 000-2z"/>
+      </svg>
+    </a>
+  </footer>
+
+</div>
+
+</body>
+</html>
